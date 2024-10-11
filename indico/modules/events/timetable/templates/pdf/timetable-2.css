@@ -11,6 +11,102 @@ body {
   font-size: 0.8em;
 }
 
+.pagebreak {
+  break-before: always;
+}
+
+.cover {
+  counter-reset: program-page 7;
+}
+
+.cover > div.cover-wrapper {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 5px solid var(--blue);
+  border-radius: 5px;
+}
+
+.cover > div.cover-wrapper > div {
+  text-align: center;
+  width: 100%;
+}
+
+/* TOC */
+
+.toc {
+  page: toc;
+  display: flex;
+  flex-direction: column;
+}
+
+.toc > div {
+  margin-bottom: 5px;
+}
+
+.toc h1 {
+  text-align: center;
+}
+
+.toc .toc-sessions > .toc-item:not(:last-child) {
+  border-bottom: 2px solid var(--blue-trans);
+}
+
+.toc .toc-sessions .toc-item a {
+  display: block;
+  padding: 5px 0;
+}
+
+.toc .toc-sessions .toc-item a::after {
+  margin-left: 3px;
+  margin-right: 10px;
+  text-align: center;
+  content: leader(' ') target-counter(attr(href), page, decimal);
+  margin-bottom: 5px;
+  border-radius: 2px;
+  font-weight: bold;
+}
+
+.toc-item-main {
+  font-size: 1.2em;
+  display: flex;
+  font-weight: bold;
+}
+
+.toc-item-main a::before {
+  display: inline-block;
+  font-size: 1em;
+  padding: 0.6em 0;
+  text-align: center;
+  width: 2.4em;
+  color: rgba(0, 0, 0, 0.4);
+  border-radius: 3px;
+  margin-right: 15px;
+  content: target-counter(attr(href), page, decimal);
+  background-color: var(--blue);
+  color: white;
+}
+
+.toc .toc-item a {
+  text-decoration: none;
+  color: black;
+}
+
+/* Numbering */
+
+#footer {
+  position: running(footer);
+}
+
+#footer::after {
+  content: target-counter('#footer', page, decimal);
+}
+
 .session-block {
   display: flex;
   margin-bottom: 10px;
