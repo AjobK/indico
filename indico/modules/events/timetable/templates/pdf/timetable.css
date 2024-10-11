@@ -135,7 +135,6 @@ body {
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
-  break-inside: avoid;
 }
 
 .session-block-title > h3 {
@@ -166,7 +165,6 @@ body {
 
 .session-block-content {
   width: 100%;
-  break-inside: avoid;
 }
 
 .day-title {
@@ -253,9 +251,7 @@ body {
 }
 
 :is(.contrib-timeline-content, .sub-contrib-timeline) > :is(p, div) {
-  break-inside: avoid;
-  break-before: avoid;
-  break-after: auto;
+
 }
 
 :is(.contrib-timeline-content, .sub-contrib-timeline) > :is(p, div):not(:last-child) {
