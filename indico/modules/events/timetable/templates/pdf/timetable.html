@@ -1,70 +1,84 @@
 <style>
-    .inherited-bg-color {
-        background-color: navy;
-    }
-    .inherited-txt-color {
-        color: aliceblue;
-    }
-    .inherited-border-color {
-        border-color: navy;
-    }
+  /* My props */
+  .session-block {
+    display: flex;
+    align-items: stretch;
+  }
+
+  .session-block-wrapper {
+    flex-grow: 1;
+  }
+
+  .time {
+    color: blue;
+    margin-right: 10px;
+    width: 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .time > .time-divider {
+    width: 3px;
+    flex-grow: 1;
+    background-color: blue;
+  }
+
+  .contrib-timeline,
+  .sub-contrib-timeline {
+    margin: 0;
+    padding: 0;
+    flex-direction: column;
+    list-style-type: none;
+  }
+
+  .contrib-timeline > li {
+    margin: 0;
+    padding: 10px;
+  }
+
+  .contrib-timeline > li:not(:last-child) {
+    border-bottom: 2px solid black;
+  }
+
+  .session-block-content-box {
+    border: 2px solid black;
+  }
 </style>
 
-{% macro render_program(event, days, show_contribs, show_length_contribs, show_breaks, new_page_per_session, show_session_description, print_date_close_to_sessions, show_title, show_affiliation) %}
-    <div class="pagebreak">
-        <div class="day-title">
-            <h2 style="text-align: center;">Some day</h2>
-        </div>
-        <section class="day" style="overflow: auto;">
-            <section class="session-block" style="overflow: auto;">
-                <div class="time" style="overflow: auto;">
-                    <div class="time-from">
-                        10:00
-                    </div>
-                    <div class="time-divider">
-                        {# Line between generated in CSS #}
-                    </div>
-                    <div class="time-to">
-                        13:00
-                    </div>
-                </div>
-                <div class="session-block-wrapper" style="overflow: auto;">
-                    <section class="session-block-title inherited-bg-color inherited-txt-color">
-                        <h3>Hello World</h3>
-                        <div class="session-block-title-info">
-                            <p><b>Session</b></p>
-                            <p>
-                                <b>Conveners:</b>
-                                John Doe, Alice Wonderland, Bob Bobson
-                            </p>
-                        </div>
-                    </section>
-                    <div class="session-block-content">
-                        <div class="session-block-content-box description inherited-border-color">
-                            <ul class="contrib-timeline">
-                                {% for i in range(5) %}
-                                    <li class="inherited-border-color" style="height: 200px;">
-                                        Hello world {{ i }}
-                                    </li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </section>
+{% macro render_program(event, days, show_contribs, show_length_contribs, show_breaks,
+new_page_per_session, show_session_description, print_date_close_to_sessions, show_title,
+show_affiliation) %}
+<section class="day">
+  <section class="session-block">
+    <div class="time">
+      <div class="time-from">
+        10:00
+      </div>
+      <div class="time-divider">
+        {# Line between generated in CSS #}
+      </div>
+      <div class="time-to">
+        13:00
+      </div>
     </div>
+    <div class="session-block-wrapper">
+      <div class="session-block-content">
+        <div class="session-block-content-box description">
+          <ul class="contrib-timeline">
+            {% for i in range(5) %}
+            <li style="height: 200px;">
+              Hello world {{ i }}
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</section>
 {% endmacro %}
 
-{{ render_program(
-    event,
-    days,
-    show_contribs,
-    show_length_contribs,
-    show_breaks,
-    new_page_per_session,
-    show_session_description,
-    print_date_close_to_sessions,
-    show_title,
-    show_affiliation
-) }}
+{{ render_program( event, days, show_contribs, show_length_contribs, show_breaks,
+new_page_per_session, show_session_description, print_date_close_to_sessions, show_title,
+show_affiliation ) }}
