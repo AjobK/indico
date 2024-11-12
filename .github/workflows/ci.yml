@@ -2,7 +2,8 @@ name: CI
 
 env:
   TZ: Europe/Zurich
-  PYTHON_VERSION_312: '3.12.3'
+  PYTHON_VERSION_312: '3.12.7'
+  NODE_VERSION: '22.x'
 
 on:
   push:
@@ -47,7 +48,7 @@ jobs:
         uses: actions/setup-node@v4
         if: steps.cache-npm.outputs.cache-hit != 'true'
         with:
-          node-version: 18.x
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: Install system dependencies
         run: sudo apt-get install libpq-dev
@@ -110,7 +111,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 18.x
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: Install uv
         run: curl -LsSf https://astral.sh/uv/install.sh | sh
@@ -252,7 +253,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 18.x
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: Install uv
         run: curl -LsSf https://astral.sh/uv/install.sh | sh
@@ -311,7 +312,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 18.x
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: Install uv
         run: curl -LsSf https://astral.sh/uv/install.sh | sh
