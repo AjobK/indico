@@ -62,6 +62,9 @@ export default function BlockEntry({
     id: `${id}`,
     // disabled: true,
   });
+  const {isPoster} = sessionData;
+  renderChildren = !isPoster && renderChildren;
+
   let style: Record<string, string | number | undefined> = transform
     ? {
         transform: `translate3d(${transform.x}px, ${snapPixels(transform.y)}px, 0)`,
@@ -144,6 +147,15 @@ export default function BlockEntry({
           dispatch(actions.selectEntry(id));
         }}
       >
+        <div
+          styleName="timeline"
+          style={
+            {
+              '--timeline-color': sessionData.textColor,
+              'height': minutesToPixels(duration - 2) - 12,
+            } as React.CSSProperties
+          }
+        />
         <BlockTitle title={title} duration={duration} timeRange={timeRange} />
         {renderChildren ? (
           <div
