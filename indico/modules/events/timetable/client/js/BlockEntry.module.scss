@@ -7,7 +7,7 @@
 
 @container (min-width: 500px) {
   button .title-wrapper {
-    max-width: 30%;
+    max-width: 35%;
   }
 }
 
@@ -68,4 +68,9 @@
   .title {
     font-weight: bold;
   }
+}
+
+.timeline {
+  border-left: 5px solid var(--timeline-color);
+  opacity: 0.5;
 }
