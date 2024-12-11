@@ -152,7 +152,7 @@ export default function BlockEntry({
           style={
             {
               '--timeline-color': sessionData.textColor,
-              'height': minutesToPixels(duration - 2) - 12,
+              'height': minutesToPixels(duration - 2),
             } as React.CSSProperties
           }
         />

@@ -71,11 +71,6 @@
 }
 
 .timeline {
-  box-sizing: border-box;
-  min-width: 4px;
-  border-radius: 4px;
-  background: var(--timeline-color);
-  opacity: 0.2;
-  // border: 1px solid var(--timeline-color);
-  margin: 6px 2px 6px 5px;
+  border-left: 5px solid var(--timeline-color);
+  opacity: 0.5;
 }
