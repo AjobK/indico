@@ -73,7 +73,7 @@ export default function BlockEntry({
     top: y,
     left: x,
     width: `calc(${width} - 6px)`,
-    height: minutesToPixels(duration - 2),
+    height: minutesToPixels(Math.max(duration - 2, 10)),
     textAlign: 'left',
     zIndex: isDragging || isResizing ? 90 : selected ? 80 : style.zIndex,
     filter: selected ? 'drop-shadow(0 0 2px #000)' : undefined,
