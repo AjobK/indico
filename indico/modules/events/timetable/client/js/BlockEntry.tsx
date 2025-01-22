@@ -87,7 +87,7 @@ export default function BlockEntry({
   };
 
   if (isPoster) {
-    style.backgroundImage = `repeating-renderChildrenlinear-gradient(45deg, ${textColor}11 0, ${textColor}11 2.8px, ${backgroundColor} 0, ${backgroundColor} 50%)`;
+    style.backgroundImage = `repeating-linear-gradient(45deg, ${textColor}11 0, ${textColor}11 2.8px, ${backgroundColor} 0, ${backgroundColor} 50%)`;
     renderChildren = false;
   }
 
