@@ -87,7 +87,8 @@ export default function BlockEntry({
   };
 
   if (isPoster) {
-    style.backgroundImage = `repeating-linear-gradient(45deg, ${textColor}11 0, ${textColor}11 2.8px, ${backgroundColor} 0, ${backgroundColor} 50%)`;
+    style.backgroundImage = `repeating-renderChildrenlinear-gradient(45deg, ${textColor}11 0, ${textColor}11 2.8px, ${backgroundColor} 0, ${backgroundColor} 50%)`;
+    renderChildren = false;
   }
 
   useEffect(() => {
@@ -107,14 +108,12 @@ export default function BlockEntry({
 
   const timeRange = formatTimeRange('en', newStart, newEnd); // TODO: use current locale
   // shift children startDt by deltaMinutes
-  const children = isPoster
-    ? []
-    : _children.map(child => ({
-        ...child,
-        startDt: moment(child.startDt)
-          .add(deltaMinutes, 'minutes')
-          .format(),
-      }));
+  const children = _children.map(child => ({
+    ...child,
+    startDt: moment(child.startDt)
+      .add(deltaMinutes, 'minutes')
+      .format(),
+  }));
 
   // const makeSetDuration = (id: number) => (d: number) => setChildDuration(id, d);
   // const setChildDuration = useCallback(() => {}, [])
