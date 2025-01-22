@@ -8,7 +8,7 @@
 import moment from 'moment';
 import React, {useEffect, useRef, useState, useMemo} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {Icon} from 'semantic-ui-react';
+import {Icon, SemanticICONS} from 'semantic-ui-react';
 
 import * as actions from './actions';
 import {useDroppable} from './dnd';
@@ -67,6 +67,9 @@ export default function BlockEntry({
         transform: `translate3d(${transform.x}px, ${snapPixels(transform.y)}px, 0)`,
       }
     : {};
+
+  const {isPoster, backgroundColor, textColor} = sessionData;
+
   style = {
     ...style,
     position: 'absolute',
@@ -78,10 +81,14 @@ export default function BlockEntry({
     zIndex: isDragging || isResizing ? 90 : selected ? 80 : style.zIndex,
     filter: selected ? 'drop-shadow(0 0 2px #000)' : undefined,
     containerType: 'inline-size',
-    backgroundColor: sessionData.backgroundColor,
     color: sessionData.textColor,
+    backgroundColor,
     // overflow: 'hidden',
   };
+
+  if (isPoster) {
+    style.backgroundImage = `repeating-linear-gradient(45deg, ${textColor}11 0, ${textColor}11 2.8px, ${backgroundColor} 0, ${backgroundColor} 50%)`;
+  }
 
   useEffect(() => {
     function onMouseMove(event: MouseEvent) {
@@ -100,12 +107,14 @@ export default function BlockEntry({
 
   const timeRange = formatTimeRange('en', newStart, newEnd); // TODO: use current locale
   // shift children startDt by deltaMinutes
-  const children = _children.map(child => ({
-    ...child,
-    startDt: moment(child.startDt)
-      .add(deltaMinutes, 'minutes')
-      .format(),
-  }));
+  const children = isPoster
+    ? []
+    : _children.map(child => ({
+        ...child,
+        startDt: moment(child.startDt)
+          .add(deltaMinutes, 'minutes')
+          .format(),
+      }));
 
   // const makeSetDuration = (id: number) => (d: number) => setChildDuration(id, d);
   // const setChildDuration = useCallback(() => {}, [])
@@ -144,7 +153,12 @@ export default function BlockEntry({
           dispatch(actions.selectEntry(id));
         }}
       >
-        <BlockTitle title={title} duration={duration} timeRange={timeRange} />
+        <BlockTitle
+          title={title}
+          duration={duration}
+          timeRange={timeRange}
+          iconName={isPoster ? 'clone outline' : undefined}
+        />
         {renderChildren ? (
           <div
             ref={setDroppableNodeRef}
@@ -187,13 +201,14 @@ function BlockTitle({
   title,
   duration,
   timeRange,
+  iconName = 'calendar alternate outline',
 }: {
   title: string;
   duration: number;
   timeRange: string;
+  iconName?: SemanticICONS;
 }) {
-  const icon = <Icon name="calendar alternate outline" style={{marginRight: 10}} />;
-
+  const icon = <Icon name={iconName} style={{marginRight: 10}} />;
   if (duration <= 12) {
     return <TinyTitle title={title} timeRange={timeRange} icon={icon} />;
   } else if (duration <= 20) {
