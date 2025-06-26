@@ -74,7 +74,7 @@ function TimetablePopupContent({
   let draftEntry = {...entry, duration: entry.duration};
   const eventId = useSelector(selectors.getEventId);
 
-  const onEdit = async (e: MouseEvent) => {
+  const onEdit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     if (!draftEntry.id) {
       return;
     }
@@ -94,6 +94,42 @@ function TimetablePopupContent({
     dispatch(actions.setDraftEntry(draftEntry));
   };
 
+  const onDelete = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (!draftEntry.id) {
+      return;
+    }
+
+    onClose();
+    e.preventDefault();
+    e.stopPropagation();
+
+    const deleteURL = {
+      [EntryType.Break]: breakURL({event_id: eventId, break_id: draftEntry.id}),
+      [EntryType.SessionBlock]: sessionBlockURL({
+        event_id: eventId,
+        session_block_id: draftEntry.id,
+      }),
+      [EntryType.Contribution]: contributionURL({event_id: eventId, contrib_id: draftEntry.id}),
+    }[draftEntry.type];
+
+    console.log('Deleting entry:', draftEntry.id, 'from URL:', deleteURL);
+
+    try {
+      const {data} = await indicoAxios.delete(deleteURL);
+      console.log(data);
+
+      if (draftEntry.type === EntryType.Break) {
+        dispatch(actions.deleteBreak(draftEntry.id));
+      } else if (draftEntry.type === EntryType.SessionBlock) {
+        dispatch(actions.deleteBlock(draftEntry.id));
+      } else if (draftEntry.type === EntryType.Contribution) {
+        dispatch(actions.unscheduleEntry(draftEntry));
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <Card fluid style={{minWidth: 400, boxShadow: 'none'}}>
       <Card.Content>
@@ -103,7 +139,7 @@ function TimetablePopupContent({
               <Button icon="edit" onClick={onEdit} />
               {/* TODO: (Ajob) Evaluate if we actually need the button below */}
               {/* <Button icon="paint brush" /> */}
-              <Button icon="trash" />
+              <Button icon="trash" onClick={onDelete} />
               {type === EntryType.SessionBlock && (
                 <Dropdown button inline icon="ellipsis vertical">
                   <DropdownMenu>

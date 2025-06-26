@@ -187,11 +187,15 @@ class RHTimetableBreak(RHManageEventBase):
     def _process_PATCH(self, data):
         with (track_time_changes(), track_location_changes()):
             update_break_entry(self.break_, data)
-        
+
         return BreakSchema(context={'event': self.event}).jsonify(self.break_)
-    
+
     def _process_GET(self):
         return BreakSchema(context={'event': self.event}).jsonify(self.break_)
+
+    def _process_DELETE(self):
+        delete_timetable_entry(self.break_.timetable_entry)
+        return jsonify(success=True)
 
 
 class RHTimetableContributionCreate(RHManageContributionsBase):
@@ -224,14 +228,23 @@ class RHTimetableContribution(RHManageContributionBase):
             data['references'] = self._get_references(references)
 
         data['person_link_data'] = {v['person_link']: v['is_submitter'] for v in data.pop('person_links', [])}
-        
+
+        # TODO: (Ajob)  Find cleaner solution for marshmallow alias. I think there's already something there
+        #               in the schema itself called marshmallow_alias which makes _description into description
+        #               but it doesn't work for dumping, only for loading.
+        if '_description' in data:
+            data['description'] = data.pop('_description')
+
         with (track_time_changes(), track_location_changes()):
             update_contribution(self.contrib, data)
-        
+
         return ContributionSchema(context={'event': self.event}).jsonify(self.contrib)
 
     def _process_GET(self):
-        return ContributionSchema(context={'event': self.event}).jsonify(self.contrib)    
+        return ContributionSchema(context={'event': self.event}).jsonify(self.contrib)
+
+    def _process_DELETE(self):
+        delete_contribution(self.contrib)
 
     @no_autoflush
     def _get_references(self, data: list[dict]) -> list[ContributionReference]:
@@ -266,12 +279,14 @@ class RHTimetableSessionBlock(RHManageEventBase):
     def _process_PATCH(self, data):
         with (track_time_changes(), track_location_changes()):
             update_session_block(self.session_block, data)
-        
+
         return SessionBlockSchema(context={'event': self.event}).jsonify(self.session_block)
-    
+
     def _process_GET(self):
         return SessionBlockSchema(context={'event': self.event}).jsonify(self.session_block)
 
+    def _process_DELETE(self):
+        delete_session_block(self.session_block)
 
 # END OF REST API
 
