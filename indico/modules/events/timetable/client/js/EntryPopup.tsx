@@ -112,8 +112,6 @@ function TimetablePopupContent({
       [EntryType.Contribution]: contributionURL({event_id: eventId, contrib_id: draftEntry.id}),
     }[draftEntry.type];
 
-    console.log('Deleting entry:', draftEntry.id, 'from URL:', deleteURL);
-
     try {
       const {data} = await indicoAxios.delete(deleteURL);
       console.log(data);
