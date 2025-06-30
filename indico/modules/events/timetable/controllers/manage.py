@@ -195,7 +195,6 @@ class RHTimetableBreak(RHManageEventBase):
 
     def _process_DELETE(self):
         delete_timetable_entry(self.break_.timetable_entry)
-        return jsonify(success=True)
 
 
 class RHTimetableContributionCreate(RHManageContributionsBase):

@@ -26,7 +26,7 @@ import {
 
 import './Entry.module.scss';
 import {Translate} from 'indico/react/i18n';
-import {indicoAxios} from 'indico/utils/axios';
+import {indicoAxios, handleAxiosError} from 'indico/utils/axios';
 
 import * as actions from './actions';
 import {formatTimeRange} from './i18n';
@@ -74,7 +74,7 @@ function TimetablePopupContent({
   let draftEntry = {...entry, duration: entry.duration};
   const eventId = useSelector(selectors.getEventId);
 
-  const onEdit = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  const onEdit = async (e: MouseEvent) => {
     if (!draftEntry.id) {
       return;
     }
@@ -94,13 +94,11 @@ function TimetablePopupContent({
     dispatch(actions.setDraftEntry(draftEntry));
   };
 
-  const onDelete = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  const onDelete = async (e: MouseEvent) => {
     if (!draftEntry.id) {
       return;
     }
 
-    onClose();
-    e.preventDefault();
     e.stopPropagation();
 
     const deleteURL = {
@@ -114,17 +112,25 @@ function TimetablePopupContent({
 
     try {
       const {data} = await indicoAxios.delete(deleteURL);
-      console.log(data);
+      data['type'] = type;
 
-      if (draftEntry.type === EntryType.Break) {
-        dispatch(actions.deleteBreak(draftEntry.id));
-      } else if (draftEntry.type === EntryType.SessionBlock) {
-        dispatch(actions.deleteBlock(draftEntry.id));
-      } else if (draftEntry.type === EntryType.Contribution) {
-        dispatch(actions.unscheduleEntry(draftEntry));
+      const deleteHandlers = {
+        [EntryType.Break]: () => dispatch(actions.deleteBreak(draftEntry.id)),
+        [EntryType.SessionBlock]: () => dispatch(actions.deleteBlock(draftEntry.id)),
+        [EntryType.Contribution]: () =>
+          dispatch(actions.unscheduleEntry(draftEntry as ContribEntry)),
+      };
+
+      const deleteHandler = deleteHandlers[draftEntry.type];
+
+      if (!deleteHandler) {
+        throw new Error('Invalid entry type or no delete handler found');
       }
+
+      deleteHandler();
+      onClose();
     } catch (err) {
-      console.log(err);
+      return handleAxiosError(err);
     }
   };
 
