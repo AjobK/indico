@@ -111,8 +111,7 @@ function TimetablePopupContent({
     }[draftEntry.type];
 
     try {
-      const {data} = await indicoAxios.delete(deleteURL);
-      data['type'] = type;
+      await indicoAxios.delete(deleteURL);
 
       const deleteHandlers = {
         [EntryType.Break]: () => dispatch(actions.deleteBreak(draftEntry.id)),
@@ -124,7 +123,7 @@ function TimetablePopupContent({
       const deleteHandler = deleteHandlers[draftEntry.type];
 
       if (!deleteHandler) {
-        throw new Error('Invalid entry type or no delete handler found');
+        throw new Error('Invalid entry type');
       }
 
       deleteHandler();
