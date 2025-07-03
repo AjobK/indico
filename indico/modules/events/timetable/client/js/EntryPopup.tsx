@@ -114,7 +114,7 @@ function TimetablePopupContent({
       await indicoAxios.delete(deleteURL);
 
       const deleteHandlers = {
-        [EntryType.Break]: () => dispatch(actions.deleteBreak(draftEntry.id)),
+        [EntryType.Break]: () => dispatch(actions.deleteBreak(draftEntry)),
         [EntryType.SessionBlock]: () => dispatch(actions.deleteBlock(draftEntry.id)),
         [EntryType.Contribution]: () =>
           dispatch(actions.unscheduleEntry(draftEntry as ContribEntry)),
