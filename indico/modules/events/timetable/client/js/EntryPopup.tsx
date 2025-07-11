@@ -89,7 +89,7 @@ function EntryPopupContent({
   };
 
   const _getPresentersArray = () => {
-    const {personLinks} = entry;
+    const {personLinks = []} = entry;
     return personLinks
       .filter(p => !p.roles || p.roles.includes(PersonLinkRole.SPEAKER))
       .map(p => p.name);
