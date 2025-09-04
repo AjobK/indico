@@ -123,7 +123,7 @@ export const mapTTDataToEntry = (data, sessions): Entry => {
     boardNumber,
     locationData: {
       address: locationData.address,
-      room: locationData.roomName,
+      room: locationData.room,
       inheriting: locationData.inheriting,
       venueName: locationData.venueName,
     },
