@@ -12,7 +12,7 @@ import {camelizeKeys} from 'indico/utils/case';
 
 import {DEFAULT_BREAK_COLORS, DEFAULT_CONTRIB_COLORS, ENTRY_COLORS_BY_BACKGROUND} from './colors';
 import {Colors, Entry, EntryType, Session} from './types';
-import { SemanticICONS } from 'semantic-ui-react';
+import {SemanticICONS} from 'semantic-ui-react';
 
 export const DATE_KEY_FORMAT = 'YYYYMMDD';
 export const LOCAL_STORAGE_KEY = 'manageTimetableData';
@@ -84,18 +84,18 @@ export function mapTTEntryColor(dbEntry, sessions: Record<number, Session> = {})
   return fallbackColor;
 }
 
-export const getEntryUniqueId = (entry): string => {
-  switch (entry.type) {
+export const getEntryUniqueId = (type: EntryType, id: string): string => {
+  switch (type) {
     case EntryType.SessionBlock:
-      return `s${entry.id}`;
+      return `s${id}`;
     case EntryType.Contribution:
-      return `c${entry.id}`;
+      return `c${id}`;
     case EntryType.Break:
-      return `b${entry.id}`;
+      return `b${id}`;
   }
 };
 
-export const mapTTDataToEntry = (data, sessions): Entry => {
+export const mapTTDataToEntry = (data, sessions, parent?: Partial<Entry>): Entry => {
   data = camelizeKeys(data);
   const {
     type,
@@ -115,7 +115,7 @@ export const mapTTDataToEntry = (data, sessions): Entry => {
   } = data;
 
   const mappedObj = {
-    id: getEntryUniqueId(data),
+    id: getEntryUniqueId(data.type, data.id),
     objId: id,
     type,
     title,
@@ -138,13 +138,19 @@ export const mapTTDataToEntry = (data, sessions): Entry => {
     maxColumn: 0,
     children: [],
     sessionId: sessionId || null,
-    sessionBlockId: sessionBlockId || null,
+    sessionBlockId: sessionBlockId
+      ? getEntryUniqueId(EntryType.SessionBlock, sessionBlockId)
+      : null,
     colors: mapTTEntryColor(data, sessions),
+    parent: parent
+      ? {
+          id: parent.id,
+          objId: parent.objId,
+          colors: parent.colors,
+          title: parent.title,
+        }
+      : null,
   };
-
-  if (sessionBlockId) {
-    mappedObj.sessionBlockId = `s${sessionBlockId}`;
-  }
 
   return mappedObj;
 };
