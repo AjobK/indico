@@ -65,6 +65,7 @@ function EntryPopupContent({
   } = entry;
   const eventId = useSelector(selectors.getEventId);
   const session = useSelector((state: ReduxState) => selectors.getSessionById(state, sessionId));
+
   const startTime = moment(startDt);
   const endTime = moment(startDt).add(duration, 'minutes');
 

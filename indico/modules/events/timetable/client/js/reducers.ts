@@ -426,7 +426,7 @@ export default {
         return state;
     }
   },
-  sessions: (
+  sessionData: (
     state: SessionData = {
       sessions: {},
       draftSession: null,
@@ -435,12 +435,14 @@ export default {
   ) => {
     switch (action.type) {
       case actions.SET_SESSION_DATA:
-        return preprocessSessionData(action.data);
+        return {...state, sessions: preprocessSessionData(action.data)};
       case actions.EDIT_SESSION:
         return {
           ...state,
-          // @ts-expect-error some TS mess with ids to fix later...
-          ...preprocessSessionData({[action.session.id]: {...action.session}}),
+          sessions: preprocessSessionData({
+            ...state.sessions,
+            [action.session.id]: {...action.session},
+          }),
         };
       case actions.DELETE_SESSION: {
         return _.omit(state, action.sessionId);
@@ -448,8 +450,10 @@ export default {
       case actions.CREATE_SESSION:
         return {
           ...state,
-          // @ts-expect-error some TS mess with ids to fix later...
-          ...preprocessSessionData({[action.session.id]: {...action.session, isPoster: false}}),
+          sessions: preprocessSessionData({
+            ...state.sessions,
+            [action.session.id]: {...action.session, isPoster: false},
+          }),
         };
       case actions.SET_DRAFT_SESSION:
         return {...state, draftSession: action.data};

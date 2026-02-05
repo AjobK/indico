@@ -16,7 +16,7 @@ export const getStaticData = (state: ReduxState) => state.staticData;
 export const getEntries = (state: ReduxState) => state.entries;
 export const getDayEntries = (state: ReduxState) =>
   state.entries.changes[state.entries.currentChangeIdx].entries;
-export const getSessions = (state: ReduxState) => state.sessions;
+export const getSessionData = (state: ReduxState) => state.sessionData;
 export const getNavigation = (state: ReduxState) => state.navigation;
 export const getDisplay = (state: ReduxState) => state.display;
 export const getLatestChange = (state: ReduxState) =>
@@ -81,6 +81,14 @@ export const getEventNumDays = createSelector(
   getEventEndDt,
   (startDt, endDt) => getDiffInDays(startDt, endDt) + 1
 );
+export const getSessions = createSelector(
+  getSessionData,
+  sessionData => sessionData.sessions
+);
+export const getDraftSession = createSelector(
+  getSessionData,
+  sessionData => sessionData.draftSession
+);
 export const getSessionById = createSelector(
   getSessions,
   (_state: ReduxState, id: number) => id,
@@ -115,7 +123,9 @@ export const getCurrentDayEntries = createSelector(
 export const getUnscheduled = createSelector(
   getLatestChange,
   getSessions,
-  (entries, sessions) => appendSessionAttributes(entries.unscheduled, sessions)
+  (entries, sessions) => {
+    return appendSessionAttributes(entries.unscheduled, sessions);
+  }
 );
 
 export const getDraftEntry = createSelector(

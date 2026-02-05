@@ -168,8 +168,8 @@ const TimetableManageModal: React.FC<TimetableManageModalProps> = ({
   const sessionValues: Session[] = Object.values(sessions);
 
   const createNewSession = () => {
+    dispatch(actions.setDraftEntry({...entry, type: EntryType.SessionBlock}));
     dispatch(actions.setDraftSession({id: 'draft'}));
-    onClose();
   };
 
   const forms: {[key in EntryType]: React.ReactElement} = {
@@ -207,10 +207,7 @@ const TimetableManageModal: React.FC<TimetableManageModalProps> = ({
     ),
   };
 
-  // TODO: (Ajob) Implement properly in next issue on editing existing entries
-  const [activeType, setActiveType] = useState<EntryType>(
-    isEditing ? entry.type : Object.keys(forms)[0]
-  );
+  const [activeType, setActiveType] = useState<EntryType>(entry?.type || Object.keys(forms)[0]);
 
   const _handleCreateContribution = async (data: any) => {
     data.session_block_id = sessionBlockId;
@@ -342,6 +339,8 @@ const TimetableManageModal: React.FC<TimetableManageModalProps> = ({
     }
     return true;
   };
+
+  console.log('entry type', entry?.type, 'active type', activeType);
 
   return (
     <FinalModalForm

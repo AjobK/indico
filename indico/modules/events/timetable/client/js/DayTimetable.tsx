@@ -14,6 +14,11 @@ import {ThunkDispatch} from 'redux-thunk';
 import './DayTimetable.module.scss';
 import './Entry.module.scss';
 
+import {
+  TimetableSessionCreateModal,
+  TimetableSessionEditModal,
+} from 'indico/modules/events/timetable/TimetableSessionModal';
+
 import * as actions from './actions';
 import {Transform, Over, MousePosition} from './dnd';
 import {useDroppable, DnDProvider} from './dnd/dnd';
@@ -117,6 +122,7 @@ export function DayTimetable({
   const [limitTop, limitBottom] = limits;
   const scrollPositionRef = useRef<number>(scrollPosition);
   const draftEntry = useSelector(selectors.getDraftEntry);
+  const draftSession = useSelector(selectors.getDraftSession);
 
   const [draggingStartPos, setDraggingStartPos] = useState<number | null>(null);
   const isDragging = draggingStartPos !== null;
@@ -391,6 +397,8 @@ export function DayTimetable({
   ].join(', ');
   const limitsGradient = `linear-gradient(180deg, ${limitsGradientArg})`;
 
+  console.log('wazzz izzz izzz', draftEntry);
+
   return (
     <DnDProvider onDrop={handleDragEnd} modifier={restrictToCalendar}>
       <UnscheduledContributions dt={dt} />
@@ -420,7 +428,7 @@ export function DayTimetable({
                     )
                   : null}
               </div>
-              {!isDragging && draftEntry && (
+              {!isDragging && draftEntry && !draftSession && (
                 <TimetableManageModal
                   eventId={eventId}
                   onClose={() => {
@@ -430,6 +438,33 @@ export function DayTimetable({
                   entry={draftEntry}
                 />
               )}
+              {draftSession &&
+                (draftSession.id === 'draft' ? (
+                  <TimetableSessionCreateModal
+                    onClose={() => dispatch(actions.setDraftSession(null))}
+                    handleSubmit={(formData: any) => {
+                      dispatch(
+                        actions.createSession(formData, createdSession => {
+                          if (draftEntry) {
+                            dispatch(
+                              actions.setDraftEntry({
+                                ...draftEntry,
+                                sessionId: createdSession.id,
+                                type: EntryType.SessionBlock,
+                              })
+                            );
+                          }
+                          dispatch(actions.setDraftSession(null));
+                        })
+                      );
+                    }}
+                  />
+                ) : (
+                  <TimetableSessionEditModal
+                    onClose={() => dispatch(actions.setDraftSession(null))}
+                    sessionId={draftSession.id}
+                  />
+                ))}
             </div>
           </DnDCalendar>
         </div>

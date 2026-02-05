@@ -218,7 +218,7 @@ export function editSession(sessionId: number, session: Partial<Session>) {
   return (dispatch: ThunkDispatch<ReduxState, unknown, Action>, getState: () => ReduxState) => {
     const {
       staticData: {eventId},
-      sessions,
+      sessionData: {sessions},
     } = getState();
     const url = sessionURL({event_id: eventId, session_id: sessionId});
     const newSessionObj = mapTTDataToSession(session);
@@ -233,7 +233,7 @@ export function editSession(sessionId: number, session: Partial<Session>) {
   };
 }
 
-export function createSession(session: Session) {
+export function createSession(session: Session, callback?: (session: Session) => void) {
   return async (
     dispatch: ThunkDispatch<ReduxState, unknown, Action>,
     getState: () => ReduxState
@@ -245,11 +245,13 @@ export function createSession(session: Session) {
 
     try {
       const {data: newSession} = await indicoAxios.post(url, session);
+      const mappedSession = mapTTDataToSession(newSession);
 
       await dispatch({
         type: CREATE_SESSION,
-        session: mapTTDataToSession(newSession),
+        session: mappedSession,
       });
+      return callback?.(mappedSession);
     } catch (e) {
       handleAxiosError(e);
     }

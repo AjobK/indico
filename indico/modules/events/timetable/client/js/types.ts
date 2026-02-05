@@ -185,7 +185,7 @@ export interface Navigation {
 
 export interface ReduxState {
   entries: Entries;
-  sessions: SessionData;
+  sessionData: SessionData;
   navigation: Navigation;
   display: {showUnscheduled: boolean};
   staticData: StaticData;
