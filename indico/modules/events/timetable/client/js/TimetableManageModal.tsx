@@ -17,7 +17,7 @@ import moment from 'moment';
 import React, {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {ThunkDispatch} from 'redux-thunk';
-import {Button, Divider, Header, Message, Segment} from 'semantic-ui-react';
+import {Button, Divider, Header, Segment} from 'semantic-ui-react';
 
 import {ContributionFormFields} from 'indico/modules/events/contributions/ContributionForm';
 import {SessionBlockFormFields} from 'indico/modules/events/sessions/SessionBlockForm';
@@ -33,6 +33,8 @@ import * as selectors from './selectors';
 import {SessionSelect} from './SessionSelect';
 import {ReduxState, BlockEntry, EntryType, Session} from './types';
 import {DATE_KEY_FORMAT, getEntryUniqueId, mapTTDataToEntry, shiftEntries} from './utils';
+
+import './TimetableManageModal.module.scss';
 
 // Generic models
 
@@ -165,6 +167,11 @@ const TimetableManageModal: React.FC<TimetableManageModalProps> = ({
 
   const sessionValues: Session[] = Object.values(sessions);
 
+  const createNewSession = () => {
+    dispatch(actions.setDraftSession({id: 'draft'}));
+    onClose();
+  };
+
   const forms: {[key in EntryType]: React.ReactElement} = {
     [EntryType.Contribution]: (
       <ContributionFormFields
@@ -176,22 +183,18 @@ const TimetableManageModal: React.FC<TimetableManageModalProps> = ({
         sessionBlock={parent}
       />
     ),
-    [EntryType.SessionBlock]: sessionValues.length ? (
+    [EntryType.SessionBlock]: (
       <>
         {!isEditing && <SessionSelect sessions={sessionValues} required />}
+        <a styleName="new-session-button" onClick={createNewSession}>
+          <Translate>Create new session</Translate>
+        </a>
         <SessionBlockFormFields
           eventId={eventId}
           extraOptions={extraOptions}
           locationParent={snakifyKeys(entry.locationParent)}
         />
       </>
-    ) : (
-      <Message
-        icon="question circle"
-        header={Translate.string('No sessions available')}
-        color="yellow"
-        content={Translate.string('Please create a session before creating a session block.')}
-      />
     ),
     [EntryType.Break]: (
       <BreakFormFields
@@ -316,6 +319,7 @@ const TimetableManageModal: React.FC<TimetableManageModalProps> = ({
         const deltaStartDt = moment(resEntry.startDt).diff(entry.startDt, 'minutes');
         resEntry.children = shiftEntries(entry.children, deltaStartDt);
       }
+
       dispatch(actions.updateEntry(activeType, resEntry, currentDay));
     } else {
       dispatch(actions.createEntry(activeType, resEntry));

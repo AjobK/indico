@@ -13,6 +13,8 @@ import {Translate} from 'indico/react/i18n';
 
 import {Session} from './types';
 
+import './SessionSelect.module.scss';
+
 interface SessionOption {
   key: string;
   text: string | React.ReactNode;
@@ -41,19 +43,24 @@ const processSessions = (sessions: Session[]) => {
 
 export function SessionSelect({sessions, ...rest}: SessionSelectProps) {
   const sessionOptions = processSessions(sessions || []);
-  const initialValue = sessionOptions.length === 1 ? sessionOptions[0].value : undefined;
+  const initialValue = sessionOptions[0]?.value;
 
   return (
     <FinalDropdown
       name="session_id"
       label={Translate.string('Session')}
-      placeholder={Translate.string('Select a session')}
+      placeholder={
+        sessionOptions.length
+          ? Translate.string('Select a session')
+          : Translate.string('No sessions available')
+      }
       options={sessionOptions}
       selection
       search={false}
       multiple={false}
-      disabled={!sessions.length}
       initialValue={initialValue}
+      nullIfEmpty
+      disabled={!sessionOptions.length}
       {...rest}
     />
   );

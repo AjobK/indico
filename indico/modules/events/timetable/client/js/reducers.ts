@@ -12,7 +12,7 @@ import * as actions from './actions';
 import {Action} from './actions';
 import {layout, layoutDays} from './layout';
 import {preprocessSessionData, preprocessTimetableEntries} from './preprocess';
-import {BlockEntry, Entries, EntryType, isChildEntry} from './types';
+import {BlockEntry, Entries, EntryType, isChildEntry, SessionData} from './types';
 import {setCurrentDateLocalStorage} from './utils';
 
 export default {
@@ -426,7 +426,13 @@ export default {
         return state;
     }
   },
-  sessions: (state = [], action: Action) => {
+  sessions: (
+    state: SessionData = {
+      sessions: {},
+      draftSession: null,
+    },
+    action: actions.Action
+  ) => {
     switch (action.type) {
       case actions.SET_SESSION_DATA:
         return preprocessSessionData(action.data);
@@ -445,6 +451,8 @@ export default {
           // @ts-expect-error some TS mess with ids to fix later...
           ...preprocessSessionData({[action.session.id]: {...action.session, isPoster: false}}),
         };
+      case actions.SET_DRAFT_SESSION:
+        return {...state, draftSession: action.data};
       default:
         return state;
     }

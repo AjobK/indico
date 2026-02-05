@@ -30,10 +30,12 @@ import {
   UnscheduledContribEntry,
   Session,
   ReduxState,
+  DraftSession,
 } from './types';
 import {getEntryURLByObjId, mapTTDataToSession} from './utils';
 
 export const SET_DRAFT_ENTRY = 'Set draft entry';
+export const SET_DRAFT_SESSION = 'Set draft session';
 export const SET_TIMETABLE_DATA = 'Set timetable data';
 export const SET_SESSION_DATA = 'Set session data';
 export const DELETE_SESSION = 'Delete session';
@@ -67,6 +69,11 @@ interface SetTimetableDataAction {
 interface SetDraftEntryAction {
   type: typeof SET_DRAFT_ENTRY;
   data: TopLevelEntry | null;
+}
+
+interface SetDraftSessionAction {
+  type: typeof SET_DRAFT_SESSION;
+  data: DraftSession | null;
 }
 
 interface ResizeEntryAction {
@@ -187,6 +194,7 @@ export type Action =
   | DeleteBreakAction
   | DeleteBlockAction
   | SetDraftEntryAction
+  | SetDraftSessionAction
   | UndoChangeAction
   | RedoChangeAction
   | SetSessionDataAction
@@ -266,6 +274,10 @@ export function deleteSession(sessionId: number) {
 
 export function setDraftEntry(data: any): SetDraftEntryAction {
   return {type: SET_DRAFT_ENTRY, data};
+}
+
+export function setDraftSession(data: DraftSession): SetDraftSessionAction {
+  return {type: SET_DRAFT_SESSION, data};
 }
 
 export function changeEntryLayout(

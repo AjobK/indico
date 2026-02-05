@@ -61,12 +61,14 @@ export interface Attachment {
 }
 
 export interface Session {
-  id: number; // XXX probably we need an id-less variant during creation, but that should be a separate type
+  id: number;
   title: string;
   isPoster: boolean;
   defaultContribDurationMinutes: number;
   colors: Colors;
 }
+
+export type DraftSession = Session | (Omit<Partial<Session>, 'id'> & {id: 'draft'});
 
 export interface BaseEntry {
   type: EntryType;
@@ -162,6 +164,11 @@ export interface Entries {
   draggedIds: Set<number>;
 }
 
+export interface SessionData {
+  sessions: Record<string, Session>;
+  draftSession: DraftSession | null;
+}
+
 interface StaticData {
   eventId: number;
   startDt: Moment;
@@ -178,7 +185,7 @@ export interface Navigation {
 
 export interface ReduxState {
   entries: Entries;
-  sessions: Record<string, Session>;
+  sessions: SessionData;
   navigation: Navigation;
   display: {showUnscheduled: boolean};
   staticData: StaticData;
