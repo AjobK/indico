@@ -44,7 +44,7 @@ const PosterContribution: React.FC<PosterContributionProps> = ({entry, block}) =
     const {data} = await indicoAxios.get(editURL);
     data.type = EntryType.Contribution;
 
-    const draftEntry = mapDataToEntry(data, {partial: true}) as ContribEntry;
+    const draftEntry = mapDataToEntry(data, true) as ContribEntry;
     dispatch(actions.setDraftEntry(draftEntry));
     openModal(DRAFT_ENTRY_MODAL, {
       eventId,
