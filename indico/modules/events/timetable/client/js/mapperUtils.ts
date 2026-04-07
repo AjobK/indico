@@ -12,6 +12,9 @@ import {camelizeKeys, snakifyKeys} from 'indico/utils/case';
 import {Entry, EntryType} from './types';
 import {getEntryUniqueId} from './utils';
 
+// (Ajob) We have to use AllKeys instead of keyof Entry, because keyof Entry
+//        will be either keyof TopLevelEntry or keyof ChildEntry, instead of
+//        a recursive union of both types and deeper nested ones.
 type AllKeys<T> = T extends unknown ? keyof T : never;
 type EntryKey = AllKeys<Entry>;
 
