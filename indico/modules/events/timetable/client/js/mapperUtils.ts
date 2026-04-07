@@ -12,16 +12,14 @@ import {camelizeKeys, snakifyKeys} from 'indico/utils/case';
 import {Entry, EntryType} from './types';
 import {getEntryUniqueId} from './utils';
 
-type TransformFn = (value: unknown, data: Record<string, unknown>) => unknown;
-
 type AllKeys<T> = T extends unknown ? keyof T : never;
 type EntryKey = AllKeys<Entry>;
 
 interface MapperEntry {
   from: string;
   to: EntryKey;
-  fromTransform?: TransformFn;
-  toTransform?: TransformFn;
+  fromTransform?: (value: unknown) => unknown;
+  toTransform?: (value: unknown) => unknown;
 }
 
 const mapperConfig: MapperEntry[] = [

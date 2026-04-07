@@ -443,8 +443,6 @@ export function _updateEntry(
   entry: Entry,
   currentDay: string
 ): UpdateEntryAction {
-  // const deltaStartDt = moment(data.startDt).diff(entry.startDt, 'minutes');
-  // entry.children = shiftEntries(entry.children, deltaStartDt);
   return {type: UPDATE_ENTRY, entryType, entry, currentDay};
 }
 
