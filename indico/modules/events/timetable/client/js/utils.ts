@@ -122,9 +122,10 @@ export const getEntryUniqueId = (type: EntryType, id: number): EntryUniqueID => 
 
 export const mapTTDataToSession = (data: any): Session => {
   data = camelizeKeys(data);
+
   return {
     ...data,
-    ...(data.colors && mapDataToEntry({colors: data.colors}, true).colors),
+    ...(data.colors && mapDataToEntry({colors: data.colors}, true)),
     ...(data.defaultContributionDuration && {
       defaultContribDurationMinutes: data.defaultContributionDuration / 60,
     }),

@@ -207,8 +207,6 @@ describe('mapperUtils', () => {
       };
       const data = mapEntryToData(entry);
 
-      console.log('data', data);
-
       expect(data.id).toBe(202);
       expect(data.type).toBe(EntryType.SessionBlock);
       expect(data.title).toBe('Session Block Title');
