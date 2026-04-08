@@ -58,7 +58,7 @@ const mapperConfig: MapperEntry[] = [
   {
     from: 'session_block_id',
     to: 'sessionBlockId',
-    fromTransform: (v: number) => getEntryUniqueId(EntryType.SessionBlock, v),
+    fromTransform: (v: number) => (v ? getEntryUniqueId(EntryType.SessionBlock, v) : null),
     toTransform: (v: string) => +v.slice(1),
   },
   {
@@ -85,15 +85,15 @@ export function mapDataToEntry(
 
   for (const {from, to, fromTransform} of mapperConfig) {
     const rawValue = data[from];
-    if (rawValue === undefined || rawValue === null) {
+    if (rawValue === undefined) {
       continue;
     }
     if (partial && !Object.prototype.hasOwnProperty.call(data, from)) {
       continue;
     }
 
-    const value = fromTransform ? fromTransform(rawValue, data) : camelizeKeys(rawValue);
-    if (value !== undefined && value !== null) {
+    const value = fromTransform ? fromTransform(rawValue) : camelizeKeys(rawValue);
+    if (value !== undefined) {
       result[to] = value;
     }
   }
@@ -120,13 +120,13 @@ export function mapEntryToData(data: Partial<Entry>, partial = false): Record<st
 
   for (const {from, to, toTransform} of mapperConfig) {
     const value = data[to];
-    if (value === undefined || value === null) {
+    if (value === undefined) {
       continue;
     }
     if (partial && !Object.prototype.hasOwnProperty.call(data, to)) {
       continue;
     }
-    const rawValue = toTransform ? toTransform(value, data) : snakifyKeys(value);
+    const rawValue = toTransform ? toTransform(value) : snakifyKeys(value);
     result[from] = rawValue;
   }
 
