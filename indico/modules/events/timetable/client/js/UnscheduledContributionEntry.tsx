@@ -8,13 +8,15 @@
 import moment, {Moment} from 'moment';
 import React from 'react';
 import {createPortal} from 'react-dom';
+import {useSelector} from 'react-redux';
 
 import {useDraggable, useDroppableData} from './dnd';
 import {pointerInside} from './dnd/utils';
 import {EntryTitle} from './Entry';
 import {formatTimeRange} from './i18n';
-import {Colors, EntryType} from './types';
-import {minutesToPixels, pixelsToMinutes, snapMinutes} from './utils';
+import * as selectors from './selectors';
+import {Colors, EntryType, ReduxState} from './types';
+import {getEntryColors, minutesToPixels, pixelsToMinutes, snapMinutes} from './utils';
 
 import './Entry.module.scss';
 
@@ -24,12 +26,14 @@ export function DraggableUnscheduledContributionEntry({
   title,
   duration,
   colors,
+  sessionId,
 }: {
   id: string;
   dt: Moment;
   title: string;
   duration: number;
   colors?: Colors;
+  sessionId?: number;
 }) {
   const droppableData = useDroppableData({id: 'calendar'});
 
@@ -98,7 +102,7 @@ export function DraggableUnscheduledContributionEntry({
           title={title}
           timeRange={timeRange}
           duration={duration}
-          colors={colors}
+          sessionId={sessionId}
           isDragging={isDragging}
         />
       </div>,
@@ -128,7 +132,7 @@ export function DraggableUnscheduledContributionEntry({
         title={title}
         timeRange={`${duration} minutes`}
         duration={duration}
-        colors={colors}
+        sessionId={sessionId}
         isDragging={isDragging}
       />
     </div>
@@ -139,15 +143,17 @@ export function UnscheduledContributionEntry({
   title,
   timeRange,
   duration,
-  colors,
+  sessionId,
   isDragging,
 }: {
   title: string;
   timeRange: string;
   duration: number;
-  colors?: Colors;
+  sessionId?: number;
   isDragging?: boolean;
 }) {
+  const session = useSelector((state: ReduxState) => selectors.getSessionById(state, sessionId));
+  const colors = getEntryColors({type: EntryType.Contribution}, session);
   const style = {
     border: '2px solid transparent',
     ...colors,
