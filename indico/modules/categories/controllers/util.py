@@ -61,6 +61,11 @@ def serialize_event(event, format_event_date, is_recent, happening_now):
         'isFavorite': event in session.user.favorite_events,
     }
 
+def serialize_managers(managers):
+    return {
+        ''
+    }
+
 
 def serialize_events_by_month(events_by_month, category, now):
     format_event_date = make_format_event_date_func(category, omit_year=True)

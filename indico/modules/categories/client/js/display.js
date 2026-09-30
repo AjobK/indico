@@ -136,7 +136,7 @@ import {$T} from 'indico/utils/i18n';
   };
 
   document.addEventListener('DOMContentLoaded', () => {
-    const root = document.getElementById('category-cards-root');
+    const root = document.getElementById('category-root');
     if (!root) {
       return;
     }

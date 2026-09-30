@@ -19,13 +19,14 @@ interface CategoryCardListProps {
   columns?: 1 | 2 | 3;
 }
 
-export function CategoryCardList({data, columns = 2}: CategoryCardListProps) {
+export function CategoryCardList({data, columns}: CategoryCardListProps) {
   const categories = data ?? [];
 
-  const gridClass = columns > 1 ? `grid-${columns}-responsive` : '';
+  // By default auto columns
+  const gridCSS = columns ? {gridTemplateColumns: `repeat(${columns}, 1fr)`} : {};
 
   return (
-    <div className={gridClass} role="group" styleName="category-card-list">
+    <Card role="group" styleName="category-card-list" style={gridCSS}>
       {categories.map(category => (
         <Card styleName="category-card" key={category.id} href={category.displayURL}>
           <Card.Icon
@@ -91,6 +92,6 @@ export function CategoryCardList({data, columns = 2}: CategoryCardListProps) {
           )}
         </Card>
       ))}
-    </div>
+    </Card>
   );
 }

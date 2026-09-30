@@ -8,6 +8,16 @@
 @use 'NGUI/styles/base' as *;
 
 :global(.indico-ui) {
+  .category {
+    width: 100%;
+    display: flex;
+    gap: var(--space-6);
+  }
+
+  .category-main {
+    flex-grow: 1;
+  }
+
   .category-title {
     margin-top: var(--space-6);
     margin-bottom: var(--space-12);

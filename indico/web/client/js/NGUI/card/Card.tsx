@@ -43,7 +43,7 @@ type CardIconElement = ReactElement<IconProps, typeof Icon>;
 type CardChild = CardIconElement | CardHeaderElement | CardMetaElement | CardDescriptionElement;
 
 interface CustomCardProps {
-  children: CardChild | CardChild[];
+  children: CardChild | CardChild[] | React.ReactNode;
 }
 
 type NativeAnchorProps = NativeProps<'a'>;
