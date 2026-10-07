@@ -9,6 +9,7 @@ import React from 'react';
 
 import './CategorySidebar.module.scss';
 import {Card} from 'indico/NGUI/card/Card';
+import {Icon} from 'indico/NGUI/icon/Icon';
 
 interface CategorySidebarProps {
   categoryId: number;
@@ -19,10 +20,17 @@ export function CategorySidebar({categoryId}: CategorySidebarProps) {
   return (
     <div styleName="category-sidebar">
       <Card>
-        Hello
+        <Card.Header>
+          <Card.Icon icon="fas:folder" />
+          Heyyy
+        </Card.Header>
+        Ajobbb
       </Card>
       <Card>
-        World
+        <Card.Header>
+          Materials
+        </Card.Header>
+        Hello
       </Card>
     </div>
   );
