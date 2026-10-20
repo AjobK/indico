@@ -71,34 +71,38 @@ export function Category({categoryId, isFlat}: CategoryProps) {
   // (Ajob) Honestly, I think the whole idea of checking the string for 'Home' is very hacky
   let title;
   if (isUntitledRoot) {
-    title = (
-      <Translate>{category.hasChildren ? 'Main categories' : 'All events'}</Translate>
-    );
+    title = <Translate>{category.hasChildren ? 'Main categories' : 'All events'}</Translate>;
   } else {
-    title = category.title
+    title = category.title;
   }
 
   return (
     <div styleName="category-wrapper">
       <section styleName="category">
         <section styleName="category-main">
-          {title}
           <Card styleName="category-info">
-            {category.logoURL && (
-              <img styleName="category-logo" src={category.logoURL} alt={category.title} />
-            )}
-            <div styleName="category-description">
-              {/* Markdown will be replaced by custom solution */}
-              <Markdown rehypePlugins={[remarkRehype]}>{category.description}</Markdown>
+            <h1>{title}</h1>
+            <div styleName="category-info-sub">
+              {category.logoURL && (
+                <img styleName="category-logo" src={category.logoURL} alt={category.title} />
+              )}
+              <div styleName="category-description">
+                {/* Markdown will be replaced by custom solution */}
+                <Markdown rehypePlugins={[remarkRehype]}>{category.description}</Markdown>
+              </div>
             </div>
           </Card>
           {!isFlat && <CategoryCardList data={categoryChildren} />}
+          {!categoryEventListWithMetaDataLoading && categoryEventListWithMeta && (
+            <EventList
+              viewData={categoryEventListWithMeta}
+              categoryId={categoryId}
+              isFlat={isFlat}
+            />
+          )}
         </section>
         <CategorySidebar categoryId={categoryId} isFlat={isFlat} />
       </section>
-      {!categoryEventListWithMetaDataLoading && categoryEventListWithMeta && (
-        <EventList viewData={categoryEventListWithMeta} categoryId={categoryId} isFlat={isFlat} />
-      )}
     </div>
   );
 }
